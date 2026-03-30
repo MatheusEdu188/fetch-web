@@ -4,7 +4,13 @@ const ul = document.querySelector("ul");
 async function buscarDados() {
     try {
         const result = await fetch("https://jsonplaceholder.typicode.com/users");
+
+        if(!result.ok){
+            throw new Error("erro na requisição")
+        }
         const dados = await result.json()
+
+
 
         return dados;
         
