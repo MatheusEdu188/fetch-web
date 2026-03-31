@@ -1,44 +1,41 @@
-const ul = document.querySelector("ul");
+const listaAnimes = document.getElementById("listaAnimes");
 
-
-async function buscarDados() {
+async function receberDados() {
     try {
-        const result = await fetch("https://jsonplaceholder.typicode.com/users");
+        const result = await fetch("https://api.jikan.moe/v4/top/anime");
 
         if(!result.ok){
-            throw new Error("erro na requisição")
+            throw new Error("Erro no carregamento")
         }
-        const dados = await result.json()
 
+        const data = await result.json();
 
-
-        return dados;
+        return data;
         
     } catch (error) {
-        console.error("Erro", error);
-
+        console.error(error);
     }
     
 }
 
 
-async function renderizar() {
-    const usuarios = await buscarDados();
 
-    try {
-        ul.innerHTML = "";
-        usuarios.forEach(element => {
-            const li = document.createElement("li");
-            li.innerHTML = element.name;
+async function renderAnimes(){
+    const resposta = await receberDados();
+    const animes = resposta.data;
 
-            ul.appendChild(li)
-            
-        });
-    } catch (error) {
-        ul.innerHTML = `Erro ao renderizar ${error}`
+
+    animes.forEach(anime => {
+        const li = document.createElement("div");
+        li.classList.add("liItem")  
+        li.innerHTML = `
+            <span class="tituloAnime">${anime.title}</span>
+            <span class="descAnime">${anime.synopsis}</span>
+        `
         
-    }
+        listaAnimes.appendChild(li);
+    });
 }
 
 
-renderizar()
+renderAnimes()
